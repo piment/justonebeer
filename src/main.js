@@ -13,7 +13,8 @@ const config = {
       debug: true
 		}
 	},
-	scene: [HelloWorldScene]
+	scene: [HelloWorldScene],
+  
 }
 
 export default new Phaser.Game(config)

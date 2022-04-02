@@ -36,7 +36,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.beersRow.forEach((beer, id) => {
       if (beer) {
         this.beersGroup.add(
-          this.createBeer(this.getColumn(id), 0, 0).setActive(false)
+          this.createBeer(this.getColumn(id), 0, 0)
         );
       } else {
         this.beersGroup.add(
