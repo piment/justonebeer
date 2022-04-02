@@ -16,4 +16,4 @@ function randomBeerOrNot () {
     return arrayRow[Math.floor(Math.random()*arrayRow.length)];
 }
 
-export {randomColumn, randomTime};
+export {randomColumn, randomTime, randomBeerRow};
