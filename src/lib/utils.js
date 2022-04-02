@@ -7,6 +7,13 @@ function randomTime (start, end) {
     return Math.floor(Math.random(start, end) *(start - end) + end);
 }
 
+function randomBeerRow () {
+return [randomBeerOrNot(),randomBeerOrNot(),randomBeerOrNot()]
+}
+
+function randomBeerOrNot () {
+    let arrayRow = [0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1];
+    return arrayRow[Math.floor(Math.random()*arrayRow.length)];
+}
+
 export {randomColumn, randomTime};
-
-
