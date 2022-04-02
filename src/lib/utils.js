@@ -7,6 +7,6 @@ function randomTime (start, end) {
     return Math.floor(Math.random(start, end) *(start - end) + end);
 }
 
-
+export {randomColumn, randomTime};
 
 
