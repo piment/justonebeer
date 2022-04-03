@@ -9,14 +9,16 @@ import beer_07 from "../assets/beers/07.png";
 import beer_08 from "../assets/beers/08_foam.png";
 import beer_09 from "../assets/beers/09_foam.png";
 import beer_10 from "../assets/beers/10_foam.png";
-import duff from "../assets/PNG/duff.png";
+import duff from "../assets/PNG/duff2.png";
 
 import grab from '../assets/sounds/Audio/cardShove1.ogg';
 import music from '../assets/sounds/music/Parabola.mp3';
+import bar from "../assets/justOneBeerBG2.jpg";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super("GameScene");
+    
     this.beers = [
       "beer_01",
       "beer_02",
@@ -46,28 +48,34 @@ export default class GameScene extends Phaser.Scene {
 
     this.load.audio('grab', grab);
     this.load.audio('music', music);
+
+    this.load.image("bg", bar);
   }
 
   create() {
+    console.log("ca marche");
+    this.width = this.sys.canvas.width;
+    this.height = this.sys.canvas.height;
+    this.add.image(0, 0, 'bg').setOrigin(0,0);
 
     this.grab = this.sound.add('grab');
     this.music = this.sound.add('music');
     this.music.play({'volume': 0.2});
 
-    this.height = this.sys.canvas.height;
-    this.width = this.sys.canvas.width;
     this.beersState = [];
-
+    this.axe1 = this.width / 3 / 2;
+    console.log(this.axe1);
     this.touchGroup = this.physics.add.staticGroup();
     this.touchGroup.add(
-      this.add.ellipse(90, this.height - 50, 100, 50, 0x333333)
+      this.add.ellipse(this.width / 3 / 2, this.height - 90, 100, 50, 0xffffff)
     );
     this.touchGroup.add(
-      this.add.ellipse(290, this.height - 50, 100, 50, 0x333333)
+      this.add.ellipse(290, this.height - 90, 100, 50, 0xffffff)
     );
     this.touchGroup.add(
-      this.add.ellipse(490, this.height - 50, 100, 50, 0x333333)
+      this.add.ellipse(490, this.height - 90, 100, 50, 0xffffff)
     );
+    
 
     // this.beersArray = Array.from({length:5}, (el, id) => Array.from({length:3}, () => this.createBeersGroup(id)));
     // console.log(this.beersArray);
@@ -130,7 +138,7 @@ export default class GameScene extends Phaser.Scene {
     this.beersGroup.children.entries.forEach((beer) => {
       if (!beer.active) {
         beer.setActive(true);
-        beer.setVelocityY(500);
+        beer.setVelocityY(400);
       } else if (beer.y > this.height) {
         if (beer.visible) {
           this.score -= 1;
@@ -150,7 +158,6 @@ export default class GameScene extends Phaser.Scene {
       }
     });
     if (left.isDown && left.getDuration() < 100) {
-      console.log(this.beersState);
       keys[0].setFillStyle("0xffffff");
 
       if (beers[0] && beers[0].body.position.y > this.height - 175) {
