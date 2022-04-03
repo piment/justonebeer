@@ -9,6 +9,7 @@ import beer_07 from "../assets/beers/07.png";
 import beer_08 from "../assets/beers/08_foam.png";
 import beer_09 from "../assets/beers/09_foam.png";
 import beer_10 from "../assets/beers/10_foam.png";
+import duff from "../assets/PNG/duff.png";
 
 import grab from '../assets/sounds/Audio/cardShove1.ogg';
 import music from '../assets/sounds/music/Parabola.mp3';
@@ -41,6 +42,8 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("beer_08", beer_08);
     this.load.image("beer_09", beer_09);
     this.load.image("beer_10", beer_10);
+    this.load.image("duff", duff);
+
     this.load.audio('grab', grab);
     this.load.audio('music', music);
   }
@@ -50,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
     this.grab = this.sound.add('grab');
     this.music = this.sound.add('music');
     this.music.play({'volume': 0.2});
+
     this.height = this.sys.canvas.height;
     this.width = this.sys.canvas.width;
     this.beersState = [];
@@ -162,6 +166,7 @@ export default class GameScene extends Phaser.Scene {
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
+            beer.setAngle(-45)
           }
         }
 
@@ -184,6 +189,7 @@ export default class GameScene extends Phaser.Scene {
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
+            beer.setAngle(-45)
           }
         }
       }
@@ -203,6 +209,7 @@ export default class GameScene extends Phaser.Scene {
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
+            beer.setAngle(-45)
           }
         }
       }
@@ -213,15 +220,22 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBeer = (column, row, type) => {
-    return this.physics.add
+    // return this.physics.add
+      // .sprite(
+      //   column,
+      //   Phaser.Math.Between(100, -500),
+      //   this.beers[
+      //     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9][Math.floor(Math.random() * 10)]
+      //   ]
+      // )
+      // .setScale(0.2);
+      return this.physics.add
       .sprite(
         column,
         Phaser.Math.Between(100, -500),
-        this.beers[
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9][Math.floor(Math.random() * 10)]
-        ]
+        'duff'
       )
-      .setScale(0.2);
+      .setScale(0.4).setAngle(Phaser.Math.Between(-90, 90));
   };
 
   createBeersGroup = (row) => {
