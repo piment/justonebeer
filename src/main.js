@@ -10,11 +10,11 @@ const config = {
 		default: 'arcade',
 		arcade: {
 			gravity: { y: 0 },
-        debug: true
+        debug: false
 		}
 	},
 	scene: [HelloWorldScene],
-  
+  domCreateContainer: true
 }
 
 export default new Phaser.Game(config)

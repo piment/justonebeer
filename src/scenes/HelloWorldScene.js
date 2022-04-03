@@ -1,23 +1,40 @@
 import Phaser from "phaser";
-import beer_01 from "../assets/beers/01.png";
-import beer_02 from "../assets/beers/02.png";
-import beer_03 from "../assets/beers/03.png";
+import beer_01 from "../assets/beers/01_foam.png";
+import beer_02 from "../assets/beers/02_foam.png";
+import beer_03 from "../assets/beers/03_foam.png";
+import beer_04 from "../assets/beers/04_foam.png";
+import beer_05 from "../assets/beers/05.png";
+import beer_06 from "../assets/beers/06_foam.png";
+import beer_07 from "../assets/beers/07.png";
+import beer_08 from "../assets/beers/08_foam.png";
+import beer_09 from "../assets/beers/09_foam.png";
+import beer_10 from "../assets/beers/10_foam.png";
 
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
     super("hello-world");
-    this.beers = ["beer_01", "beer_02", "beer_03"];
+    this.beers = ["beer_01", "beer_02", "beer_03", "beer_04", "beer_05", "beer_06", "beer_07", "beer_08", "beer_09","beer_10"];
   }
 
   preload() {
     this.load.image("beer_01", beer_01);
     this.load.image("beer_02", beer_02);
     this.load.image("beer_03", beer_03);
+    this.load.image("beer_04", beer_04);
+    this.load.image("beer_05", beer_05);
+    this.load.image("beer_06", beer_06);
+    this.load.image("beer_07", beer_07);
+    this.load.image("beer_08", beer_08);
+    this.load.image("beer_09", beer_09);
+    this.load.image("beer_10", beer_10);
   }
 
   create() {
-    Phaser.Physics.Arcade.World;
+    //Phaser.Physics.Arcade.World;
     this.height = this.sys.canvas.height;
+    this.width = this.sys.canvas.width;
+    this.beersState = [];
+
     this.touchGroup = this.physics.add.staticGroup();
     this.touchGroup.add(
       this.add.ellipse(90, this.height - 50, 100, 50, 0x333333)
@@ -36,138 +53,162 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.beersRow.forEach((beer, id) => {
       if (beer) {
         this.beersGroup.add(
-          this.createBeer(this.getColumn(id), 0, 0)
+          this.createBeer(this.getColumn(id), 0, 0).setActive(false)
         );
+        this.beersState.push(0);
       } else {
         this.beersGroup.add(
           this.createBeer(this.getColumn(id), 0, 0)
             .setActive(false)
             .setVisible(false)
         );
+        this.beersState.push(0);
       }
     });
-
+    
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.score = 10;
     this.scoreDisplayed = this.add.text(10, 10, `Score: ${this.score}`);
+    this.takenBeers = this.physics.add.group();
   }
+
   update() {
-    if (this.beersGroup.children.entries.length === 0) {
+
+    console.log(this.beersGroup.children.entries)
+
+    const up = this.cursor.up;
+    const left = this.cursor.left;
+    const right = this.cursor.right;
+    const beers = this.beersGroup.children.entries;
+    const keys = this.touchGroup.children.entries;
+    const takenBeers = this.takenBeers.children.entries;
+    const beersState = this.beersState;
+    
+    if (beers.length < 3) {
+      this.beersState = [];
       this.beersRow = this.getBeersRow();
-      console.log(this.beersRow);
-      console.log(this.beersGroup.children.entries);
+
       this.beersRow.forEach((beer, id) => {
         if (beer) {
           this.beersGroup.add(
             this.createBeer(this.getColumn(id), 0, 0).setActive(false)
           );
+          this.beersState.push(0);
         } else {
           this.beersGroup.add(
             this.createBeer(this.getColumn(id), 0, 0)
               .setActive(false)
               .setVisible(false)
           );
+          this.beersState.push(0);
         }
       });
     }
-    this.beersGroup.children.entries.forEach((el) => {
-      if (!el.active) {
-        el.setActive(true);
-        el.setVelocityY(500);
-      } else if (el.y > this.height) {
-        if(el.visible){
+    this.beersGroup.children.entries.forEach((beer) => {
+      if (!beer.active) {
+        beer.setActive(true);
+        beer.setVelocityY(500);
+      } else if (beer.y > this.height) {
+        if (beer.visible) {
           this.score -= 1;
         }
-        el.setActive(false);
-        el.setVisible(false);
-        el.destroy(true);
-        
-        
+        beer.setActive(false);
+        beer.setVisible(false);
+        beer.destroy(true);
       }
     });
-    if(this.beersGroup.children.entries[0].active == true){
-      console.log("test ", this.beersGroup.children.entries[0]);  
-    }
-    
-    if (this.cursor.left.isDown && this.cursor.left.getDuration() < 50) {
-      console.log(this.cursor.left.getDuration());
-      this.touchGroup.children.entries[0].setFillStyle("0xffffff");
-      
-      if (
-        this.beersGroup.children.entries[0] &&
-        this.beersGroup.children.entries[0].y > this.sys.canvas.height - 100
-      ) {
-        console.log("hit 1");
+
+    this.takenBeers.children.entries.forEach((beer, id) => {
+      console.log(takenBeers, beersState);
+      if(beersState[id] == 1){
         
-        console.log(this.beersGroup.children.entries[0]);
+        if(takenBeers[id].body.position.x > this.width){
+          console.log(beersState[id], takenBeers[id].body.position.x, this.width);
+          this.beersState[id] = 0;
+          this.takenBeers.children.entries.splice(id,1)[0].destroy(true);
+          console.log("Destroyed : ", id)
+        }
+      }
+    })
+    if (left.isDown && left.getDuration() < 50) {
+      console.log(this.beersState)
+      keys[0].setFillStyle("0xffffff");
+
+      if (beers[0] && beers[0].body.position.y > this.height - 150) {
         
-        this.beersGroup.children.entries[0].setVisible(false);
-        this.beersGroup.children.entries[0].destroy(true);
-        this.score += 1;
+        if (beers[0].visible) {
+          this.score += 1;
+          if(this.beersState[0] === 0) {
+            console.log("hit 1");
+            this.beersState[0] = 1;
+            this.takenBeers.add(this.beersGroup.children.entries.splice(0,1)[0]);
+            const index = this.takenBeers.children.entries.length - 1; 
+            const beer = this.takenBeers.children.entries[index];
+            beer.setVelocityY(0);
+            beer.setVelocityX(800);
+          }
+          
+        }
+        
+        
+        // this.beersGroup.children.entries[0].setActive(false);
+        // this.beersGroup.children.entries[0].destroy(true);
       }
     } else {
-      this.touchGroup.children.entries[0].setFillStyle("0x333333");
+      keys[0].setFillStyle("0x333333");
     }
-    if (this.cursor.up.isDown && this.cursor.up.getDuration() < 50) {
-      this.touchGroup.children.entries[1].setFillStyle("0xffffff");
+    if (up.isDown && up.getDuration() < 50) {
+      console.log(this.beersState)
+      keys[1].setFillStyle("0xffffff");
       if (
-        this.beersGroup.children.entries[1] &&
-        this.beersGroup.children.entries[1].y > this.sys.canvas.height - 100
+        beers[1] &&
+        beers[1].body.position.y > this.height - 150
       ) {
-        this.beersGroup.children.entries[1].destroy(true);
-        console.log("hit 2");
-        this.score += 1;
+        if (beers[1].visible) {
+          this.score += 1;
+          if(this.beersState[1] === 0) {
+            console.log("hit 2");
+            this.beersState[1] = 1;
+            this.takenBeers.add(beers.splice(1,1)[0]);
+            const index = this.takenBeers.children.entries.length - 1; 
+            const beer = this.takenBeers.children.entries[index];
+            beer.setVelocityY(0);
+            beer.setVelocityX(800);
+          }
+          
+        }
       }
     } else {
-      this.touchGroup.children.entries[1].setFillStyle("0x333333");
+      keys[1].setFillStyle("0x333333");
     }
-    if (this.cursor.right.isDown && this.cursor.right.getDuration() < 50) {
-      console.log(this.beersGroup.children.entries);
-      this.touchGroup.children.entries[2].setFillStyle("0xffffff");
-      if (
-        this.beersGroup.children.entries[2] &&
-        this.beersGroup.children.entries[2].y > this.sys.canvas.height - 100
-      ) {
-        this.beersGroup.children.entries[2].destroy(true);
-        console.log("hit 3");
-        this.score += 1;
+    if (right.isDown && right.getDuration() < 50) {
+      console.log(this.beersState)
+      keys[2].setFillStyle("0xffffff");
+      if (beers[2] && beers[2].body.position.y > this.height - 150) {
+        if (beers[2].visible) {
+          this.score += 1;
+          if(this.beersState[2] === 0) {
+            console.log("hit 1");
+            this.beersState[2] = 1;
+            this.takenBeers.add(beers.splice(2,1)[0]);
+            const index = this.takenBeers.children.entries.length - 1; 
+            const beer = this.takenBeers.children.entries[index];
+            beer.setVelocityY(0);
+            beer.setVelocityX(800);
+          }
+          
+        }
       }
     } else {
-      this.touchGroup.children.entries[2].setFillStyle("0x333333");
+      keys[2].setFillStyle("0x333333");
     }
     this.scoreDisplayed.setText(`Score: ${this.score}`);
-
-    // this.beersGroup.children.entries.forEach((beer, id) => {
-    //   if (beer.y > this.sys.canvas.height - 100) {
-    //     console.log(beer.x);
-    //     if (beer.x === 100 && this.cursor.left.isDown) {
-    //       this.touchGroup.children.entries[id].setFillStyle("0xffffff");
-    //       this.score += 10;
-    //       console.log("Score = ", this.scoreDisplayed.text);
-    //       this.scoreDisplayed.setText(`Score: ${this.score}`);
-    //     }
-    //     else if (beer.x === 300 && this.cursor.up.isDown) {
-    //       this.touchGroup.children.entries[id].setFillStyle("0xffffff");
-    //       this.score += 10;
-    //       console.log("Score = ", this.scoreDisplayed.text);
-    //       this.scoreDisplayed.setText(`Score: ${this.score}`);
-    //     }
-    //     else if (beer.x === 500 && this.cursor.right.isDown) {
-    //       this.touchGroup.children.entries[id].setFillStyle("0xffffff");
-    //       this.score += 10;
-    //       console.log("Score = ", this.scoreDisplayed.text);
-    //       this.scoreDisplayed.setText(`Score: ${this.score}`);
-    //     }
-    //     else {
-    //       this.touchGroup.children.entries[id].setFillStyle("0x333333");
-    //     }
-    //   }
-    // });
+    
   }
 
   createBeer = (column, row, type) => {
-    return this.physics.add.image(column, row, this.beers[type]).setScale(0.2);
+    return this.physics.add.sprite(column, Phaser.Math.Between(100, -500), this.beers[[0,1,2,3,4,5,6,7,8,9][Math.floor(Math.random() * 10)]]).setScale(0.2);
   };
 
   createBeersGroup = (row) => {
@@ -176,11 +217,12 @@ export default class HelloWorldScene extends Phaser.Scene {
     beersRow.forEach((beer, id) => {
       if (beer) {
         beersGroup.add(
-          this.createBeer(this.getColumn(id), row).setActive(false)
+          // this.createBeer(this.getColumn(id), row).setActive(false)
+          this.createBeer(this.getColumn(id), -50).setActive(false)
         );
       } else {
         beersGroup.add(
-          this.createBeer(this.getColumn(id), row)
+          this.createBeer(this.getColumn(id), 0)
             .setActive(false)
             .setVisible(false)
         );
@@ -197,7 +239,8 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   getBeersRow = () => {
     const getBeerOrNot = () => {
-      return Math.floor(Math.random() * 2);
+      const array = [0,1,0,1,0,1,0,1,0,1];
+      return Math.floor(Math.random() * 10);
     };
     return [getBeerOrNot(), getBeerOrNot(), getBeerOrNot()];
   };
