@@ -14,7 +14,7 @@ const config = {
 		}
 	},
 	scene: [HelloWorldScene],
-  domCreateContainer: true
+  parent: "game-canvas"
 }
 
 export default new Phaser.Game(config)

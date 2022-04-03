@@ -10,7 +10,7 @@ body {
   padding: 0;
 
   /* body style */
-  background-image: url('/src/assets/PNG/background.jpg');
+  background-image: url('../PNG/background.jpg');
   background-color: black;
 
 }

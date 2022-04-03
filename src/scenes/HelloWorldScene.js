@@ -13,7 +13,18 @@ import beer_10 from "../assets/beers/10_foam.png";
 export default class HelloWorldScene extends Phaser.Scene {
   constructor() {
     super("hello-world");
-    this.beers = ["beer_01", "beer_02", "beer_03", "beer_04", "beer_05", "beer_06", "beer_07", "beer_08", "beer_09","beer_10"];
+    this.beers = [
+      "beer_01",
+      "beer_02",
+      "beer_03",
+      "beer_04",
+      "beer_05",
+      "beer_06",
+      "beer_07",
+      "beer_08",
+      "beer_09",
+      "beer_10",
+    ];
   }
 
   preload() {
@@ -65,7 +76,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.beersState.push(0);
       }
     });
-    
+
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.score = 10;
@@ -74,8 +85,7 @@ export default class HelloWorldScene extends Phaser.Scene {
   }
 
   update() {
-
-    console.log(this.beersGroup.children.entries)
+    console.log(this.beersGroup.children.entries);
 
     const up = this.cursor.up;
     const left = this.cursor.left;
@@ -84,7 +94,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     const keys = this.touchGroup.children.entries;
     const takenBeers = this.takenBeers.children.entries;
     const beersState = this.beersState;
-    
+
     if (beers.length < 3) {
       this.beersState = [];
       this.beersRow = this.getBeersRow();
@@ -121,37 +131,39 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     this.takenBeers.children.entries.forEach((beer, id) => {
       console.log(takenBeers, beersState);
-      if(beersState[id] == 1){
-        
-        if(takenBeers[id].body.position.x > this.width){
-          console.log(beersState[id], takenBeers[id].body.position.x, this.width);
+      if (beersState[id] == 1) {
+        if (takenBeers[id].body.position.x > this.width) {
+          console.log(
+            beersState[id],
+            takenBeers[id].body.position.x,
+            this.width
+          );
           this.beersState[id] = 0;
-          this.takenBeers.children.entries.splice(id,1)[0].destroy(true);
-          console.log("Destroyed : ", id)
+          this.takenBeers.children.entries.splice(id, 1)[0].destroy(true);
+          console.log("Destroyed : ", id);
         }
       }
-    })
+    });
     if (left.isDown && left.getDuration() < 50) {
-      console.log(this.beersState)
+      console.log(this.beersState);
       keys[0].setFillStyle("0xffffff");
 
       if (beers[0] && beers[0].body.position.y > this.height - 150) {
-        
         if (beers[0].visible) {
           this.score += 1;
-          if(this.beersState[0] === 0) {
+          if (this.beersState[0] === 0) {
             console.log("hit 1");
             this.beersState[0] = 1;
-            this.takenBeers.add(this.beersGroup.children.entries.splice(0,1)[0]);
-            const index = this.takenBeers.children.entries.length - 1; 
+            this.takenBeers.add(
+              this.beersGroup.children.entries.splice(0, 1)[0]
+            );
+            const index = this.takenBeers.children.entries.length - 1;
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
           }
-          
         }
-        
-        
+
         // this.beersGroup.children.entries[0].setActive(false);
         // this.beersGroup.children.entries[0].destroy(true);
       }
@@ -159,56 +171,58 @@ export default class HelloWorldScene extends Phaser.Scene {
       keys[0].setFillStyle("0x333333");
     }
     if (up.isDown && up.getDuration() < 50) {
-      console.log(this.beersState)
+      console.log(this.beersState);
       keys[1].setFillStyle("0xffffff");
-      if (
-        beers[1] &&
-        beers[1].body.position.y > this.height - 150
-      ) {
+      if (beers[1] && beers[1].body.position.y > this.height - 150) {
         if (beers[1].visible) {
           this.score += 1;
-          if(this.beersState[1] === 0) {
+          if (this.beersState[1] === 0) {
             console.log("hit 2");
             this.beersState[1] = 1;
-            this.takenBeers.add(beers.splice(1,1)[0]);
-            const index = this.takenBeers.children.entries.length - 1; 
+            this.takenBeers.add(beers.splice(1, 1)[0]);
+            const index = this.takenBeers.children.entries.length - 1;
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
           }
-          
         }
       }
     } else {
       keys[1].setFillStyle("0x333333");
     }
     if (right.isDown && right.getDuration() < 50) {
-      console.log(this.beersState)
+      console.log(this.beersState);
       keys[2].setFillStyle("0xffffff");
       if (beers[2] && beers[2].body.position.y > this.height - 150) {
         if (beers[2].visible) {
           this.score += 1;
-          if(this.beersState[2] === 0) {
+          if (this.beersState[2] === 0) {
             console.log("hit 1");
             this.beersState[2] = 1;
-            this.takenBeers.add(beers.splice(2,1)[0]);
-            const index = this.takenBeers.children.entries.length - 1; 
+            this.takenBeers.add(beers.splice(2, 1)[0]);
+            const index = this.takenBeers.children.entries.length - 1;
             const beer = this.takenBeers.children.entries[index];
             beer.setVelocityY(0);
             beer.setVelocityX(800);
           }
-          
         }
       }
     } else {
       keys[2].setFillStyle("0x333333");
     }
     this.scoreDisplayed.setText(`Score: ${this.score}`);
-    
   }
 
   createBeer = (column, row, type) => {
-    return this.physics.add.sprite(column, Phaser.Math.Between(100, -500), this.beers[[0,1,2,3,4,5,6,7,8,9][Math.floor(Math.random() * 10)]]).setScale(0.2);
+    return this.physics.add
+      .sprite(
+        column,
+        Phaser.Math.Between(100, -500),
+        this.beers[
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9][Math.floor(Math.random() * 10)]
+        ]
+      )
+      .setScale(0.2);
   };
 
   createBeersGroup = (row) => {
@@ -239,7 +253,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   getBeersRow = () => {
     const getBeerOrNot = () => {
-      const array = [0,1,0,1,0,1,0,1,0,1];
+      const array = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
       return Math.floor(Math.random() * 10);
     };
     return [getBeerOrNot(), getBeerOrNot(), getBeerOrNot()];
