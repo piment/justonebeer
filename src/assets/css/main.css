@@ -16,7 +16,9 @@ body {
 }
 
 /* TITLES */
-
+canvas {
+  background-color: rgba(0, 0, 0, 0.8);
+}
 .principal-title {
   color: #dbc165;
   font-weight: bold;

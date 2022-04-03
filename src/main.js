@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
-
-import HelloWorldScene from './scenes/HelloWorldScene'
+import StartScene from './scenes/StartScene'
+import GameScene from './scenes/GameScene'
 
 const config = {
 	type: Phaser.AUTO,
@@ -13,8 +13,12 @@ const config = {
         debug: false
 		}
 	},
-	scene: [HelloWorldScene],
-  parent: "game-canvas"
+	scene: [StartScene, GameScene],
+  parent: "game-canvas",
+  transparent: true,
+  audio: {
+    disableWebAudio: true
+  }
 }
 
 export default new Phaser.Game(config)
